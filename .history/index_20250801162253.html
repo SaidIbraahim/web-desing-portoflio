@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <!-- Simple Navigation -->
+    <nav class="bg-white shadow p-4">
+        <div class="flex justify-center space-x-8">
+            <button onclick="loadPage('home')" class="text-blue-600 hover:text-blue-800">Home</button>
+            <button onclick="loadPage('about')" class="text-gray-600 hover:text-blue-600">About</button>
+            <button onclick="loadPage('skills')" class="text-gray-600 hover:text-blue-600">Skills</button>
+            <button onclick="loadPage('contact')" class="text-gray-600 hover:text-blue-600">Contact</button>
+        </div>
+    </nav>
+
+    <!-- Content Area -->
+    <div id="content"></div>
+
+    <script>
+        // Simple page loader
+        async function loadPage(page) {
+            try {
+                const response = await fetch(page + '.html');
+                const html = await response.text();
+                document.getElementById('content').innerHTML = html;
+                
+                // Update active button
+                document.querySelectorAll('nav button').forEach(btn => {
+                    btn.className = 'text-gray-600 hover:text-blue-600';
+                });
+                event.target.className = 'text-blue-600 hover:text-blue-800';
+            } catch (error) {
+                document.getElementById('content').innerHTML = '<p class="p-8 text-center">Page not found</p>';
+            }
+        }
+
+        // Load home page by default
+        loadPage('home');
+    </script>
+</body>
+</html>

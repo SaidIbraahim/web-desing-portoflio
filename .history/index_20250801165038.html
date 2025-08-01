@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <nav x-data="{ open: false }" class="px-5 pt-5 flex  justify-between md:justify-around items-center relative shadow pb-4  bg-gray-800 text-white">
+
+        <img class="w-10" src="https://upload.wikimedia.org/wikipedia/en/thumb/b/bd/Reddit_Logo_Icon.svg/220px-Reddit_Logo_Icon.svg.png" alt="Logo" />
+  
+        <button @click="open = !open" class="md:hidden focus:outline-none text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+  
+        <div class="hidden md:flex space-x-6">
+          <a class="hover:text-bluegreen hover:underline" href="/">Home</a>
+          <a class="hover:text-bluegreen hover:underline" href="/services">Services</a>
+          <a class="hover:text-bluegreen hover:underline" href="/project">Project</a>
+          <a class="hover:text-bluegreen hover:underline" href="/about-us">About us</a>
+        </div>
+  
+        <div class="hidden md:flex space-x-4">
+          <a class="rounded-xl p-3 bg-bluegreen hover:bg-white hover:text-bluegreen" href="/started">Get Started</a>
+          <a class="rounded-xl p-3 border-2 border-white hover:bg-white hover:text-black" href="/talk">Let's talk</a>
+        </div>
+  
+        <div x-cloak x-show="open" x-transition class="absolute top-full left-0 w-full bg-gray-800 lg:hidden flex flex-col items-center py-5 space-y-4 ">
+          <a class="hover:text-bluegreen hover:underline" href="/">Home</a>
+          <a class="hover:text-bluegreen hover:underline" href="/services">Services</a>
+          <a class="hover:text-bluegreen hover:underline" href="/project">Project</a>
+          <a class="hover:text-bluegreen hover:underline" href="/about-us">About us</a>
+          <a class="rounded-xl p-3 bg-bluegreen hover:bg-white hover:text-bluegreen" href="/started">Get Started</a>
+          <a class="rounded-xl p-3 border-2 border-white hover:bg-white hover:text-black" href="/talk">Let's talk</a>
+        </div>
+      </nav>
+  
+      <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>

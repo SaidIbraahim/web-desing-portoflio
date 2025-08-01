@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John Doe - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom styles for smooth transitions */
+        .page-transition {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .page-transition.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md shadow-sm z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+                        JD
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">John Doe</span>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-blue-600 font-medium" data-page="home">Home</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-blue-600 font-medium" data-page="about">About</a>
+                    <a href="#skills" class="nav-link text-gray-700 hover:text-blue-600 font-medium" data-page="skills">Skills</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium" data-page="contact">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-bars text-gray-700"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+                <div class="flex flex-col space-y-4 py-4">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-4 py-2" data-page="home">Home</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-4 py-2" data-page="about">About</a>
+                    <a href="#skills" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-4 py-2" data-page="skills">Skills</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium px-4 py-2" data-page="contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="mainContent" class="pt-16">
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="flex items-center justify-center min-h-screen">
+            <div class="text-center">
+                <div class="loading-spinner mx-auto mb-4"></div>
+                <p class="text-gray-600">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Page Content Container -->
+        <div id="pageContent" class="page-transition"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-20">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 John Doe. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Page Management System
+        class PortfolioApp {
+            constructor() {
+                this.currentPage = 'home';
+                this.pages = {
+                    home: 'home.html',
+                    about: 'about.html',
+                    skills: 'skills.html',
+                    contact: 'contact.html'
+                };
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadPage('home');
+                this.handleHashChange();
+            }
+
+            setupEventListeners() {
+                // Navigation links
+                document.querySelectorAll('[data-page]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const page = e.target.dataset.page;
+                        this.loadPage(page);
+                        this.updateURL(page);
+                    });
+                });
+
+                // Mobile menu toggle
+                document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                // Handle browser back/forward
+                window.addEventListener('popstate', () => {
+                    this.handleHashChange();
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                    
+                    if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            }
+
+            async loadPage(pageName) {
+                try {
+                    // Show loading spinner
+                    this.showLoading(true);
+                    
+                    // Update active navigation
+                    this.updateActiveNav(pageName);
+                    
+                    // Load page content
+                    const response = await fetch(this.pages[pageName]);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load ${pageName}`);
+                    }
+                    
+                    const html = await response.text();
+                    
+                    // Extract body content from the loaded page
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const bodyContent = doc.body.innerHTML;
+                    
+                    // Update page content
+                    const pageContent = document.getElementById('pageContent');
+                    pageContent.innerHTML = bodyContent;
+                    
+                    // Hide loading spinner and show content
+                    this.showLoading(false);
+                    
+                    // Add loaded class for animation
+                    setTimeout(() => {
+                        pageContent.classList.add('loaded');
+                    }, 100);
+                    
+                    // Execute any scripts from the loaded page
+                    this.executePageScripts(doc);
+                    
+                    this.currentPage = pageName;
+                    
+                } catch (error) {
+                    console.error('Error loading page:', error);
+                    this.showError(`Failed to load ${pageName} page`);
+                    this.showLoading(false);
+                }
+            }
+
+            executePageScripts(doc) {
+                // Execute scripts from the loaded page
+                const scripts = doc.querySelectorAll('script');
+                scripts.forEach(script => {
+                    if (script.textContent) {
+                        eval(script.textContent);
+                    }
+                });
+            }
+
+            updateActiveNav(pageName) {
+                // Remove active class from all nav links
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Add active class to current page link
+                document.querySelectorAll(`[data-page="${pageName}"]`).forEach(link => {
+                    link.classList.add('active');
+                });
+            }
+
+            updateURL(pageName) {
+                const url = new URL(window.location);
+                url.hash = pageName;
+                window.history.pushState({}, '', url);
+            }
+
+            handleHashChange() {
+                const hash = window.location.hash.slice(1) || 'home';
+                if (this.pages[hash]) {
+                    this.loadPage(hash);
+                }
+            }
+
+            showLoading(show) {
+                const spinner = document.getElementById('loadingSpinner');
+                const content = document.getElementById('pageContent');
+                
+                if (show) {
+                    spinner.classList.remove('hidden');
+                    content.classList.remove('loaded');
+                } else {
+                    spinner.classList.add('hidden');
+                }
+            }
+
+            showError(message) {
+                const pageContent = document.getElementById('pageContent');
+                pageContent.innerHTML = `
+                    <div class="flex items-center justify-center min-h-screen">
+                        <div class="text-center">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+                            <h2 class="text-2xl font-bold text-gray-800 mb-2">Oops!</h2>
+                            <p class="text-gray-600">${message}</p>
+                            <button onclick="app.loadPage('home')" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                Go Home
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.app = new PortfolioApp();
+        });
+
+        // Smooth scrolling for anchor links
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('a[href^="#"]')) {
+                e.preventDefault();
+                const target = document.querySelector(e.target.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
